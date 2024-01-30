@@ -4,67 +4,80 @@ import Usuario from '../../models/Usuario'
 import { cadastrarUsuario } from '../../services/Service'
 import './Cadastro.css'
 import { toastAlerta } from '../../util/toastAlerta'
+import fotosCadastro from './FotosCadastro'; // Importe as fotos
+import AvatarSelector from './AvatarSelector'; // Importe o componente AvatarSelector
+import axios from 'axios';
 
 function Cadastro() {
+  let navigate = useNavigate();
 
-  let navigate = useNavigate()
+  const handleFotoChange = (link: string) => {
+    // Atualiza o estado do usuário com o link da foto
+    setUsuario({
+      ...usuario,
+      foto: link,
+    });
+  };
 
-  const [confirmaSenha, setConfirmaSenha] = useState<string>("")
+  const [confirmaSenha, setConfirmaSenha] = useState<string>('');
 
   const [usuario, setUsuario] = useState<Usuario>({
     id: 0,
     nome: '',
     usuario: '',
     senha: '',
-    foto: ''
-  })
+    foto: '',
+  });
 
   const [usuarioResposta, setUsuarioResposta] = useState<Usuario>({
     id: 0,
     nome: '',
     usuario: '',
     senha: '',
-    foto: ''
-  })
+    foto: '',
+  });
 
   useEffect(() => {
     if (usuarioResposta.id !== 0) {
-      back()
+      // Navega de volta para a página de login após o usuário ser cadastrado com sucesso
+      back();
     }
-  }, [usuarioResposta])
+  }, [usuarioResposta]);
 
   function back() {
-    navigate('/login')
+    navigate('/login');
   }
 
   function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>) {
-    setConfirmaSenha(e.target.value)
+    // Atualiza o estado da confirmação de senha
+    setConfirmaSenha(e.target.value);
   }
 
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+    // Atualiza o estado do usuário com os dados do formulário
     setUsuario({
       ...usuario,
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
   }
 
   async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
-    e.preventDefault()
+    e.preventDefault();
 
     if (confirmaSenha === usuario.senha && usuario.senha.length >= 8) {
-
       try {
-        await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuarioResposta)
-        toastAlerta('Usuário cadastrado com sucesso', 'sucesso')
-
+        // Chama a função de serviço para cadastrar o usuário
+        await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuarioResposta);
+        toastAlerta('Usuário cadastrado com sucesso', 'sucesso');
       } catch (error) {
-        toastAlerta('Usuário cadastrado com sucesso', 'sucesso')
+        // Em caso de erro no cadastro, exibe uma mensagem de erro
+        toastAlerta('Erro ao cadastrar usuário', 'erro');
       }
-
     } else {
-      toastAlerta('Dados inconsistentes. Verifique as informações de cadastro.', 'erro')
-      setUsuario({ ...usuario, senha: "" }) // Reinicia o campo de Senha
-      setConfirmaSenha("")                  // Reinicia o campo de Confirmar Senha
+      // Em caso de senhas diferentes ou senha menor que 8 caracteres, exibe uma mensagem de erro
+      toastAlerta('Dados inconsistentes. Verifique as informações de cadastro.', 'erro');
+      setUsuario({ ...usuario, senha: '' }); // Reinicia o campo de Senha
+      setConfirmaSenha(''); // Reinicia o campo de Confirmar Senha
     }
   }
 
@@ -82,7 +95,7 @@ function Cadastro() {
               name="nome"
               placeholder="Nome"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.nome} 
+              value={usuario.nome}
               onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
@@ -94,11 +107,17 @@ function Cadastro() {
               name="usuario"
               placeholder="Usuario"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.usuario} 
+              value={usuario.usuario}
               onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
+
           <div className="flex flex-col w-full">
+
+            <AvatarSelector fotos={fotosCadastro} onSelect={handleFotoChange} />
+          </div>
+
+          {/* <div className="flex flex-col w-full">
             <label htmlFor="foto">Foto</label>
             <input
               type="text"
@@ -106,10 +125,10 @@ function Cadastro() {
               name="foto"
               placeholder="Foto"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.foto} 
+              value={usuario.foto}
               onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
-          </div>
+      </div>*/}
           <div className="flex flex-col w-full">
             <label htmlFor="senha">Senha</label>
             <input
@@ -118,7 +137,7 @@ function Cadastro() {
               name="senha"
               placeholder="Senha"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.senha} 
+              value={usuario.senha}
               onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
@@ -142,8 +161,8 @@ function Cadastro() {
               Cadastrar
             </button>
           </div>
-        </form>
-      </div>
+        </form >
+      </div >
     </>
   )
 }

@@ -8,39 +8,43 @@ import UsuarioLogin from '../../models/UsuarioLogin';
 import { RotatingLines } from 'react-loader-spinner';
 
 function Login() {
+  // Utiliza o hook useNavigate do React Router para navegação
   let navigate = useNavigate();
 
-  const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>(
-    {} as UsuarioLogin
-  );
+  // Estado local para armazenar os dados do usuário durante o login
+  const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>({} as UsuarioLogin);
 
-  const { usuario, handleLogin } = useContext(AuthContext);
+  // Obtém dados e funções de autenticação do contexto
+  const { usuario, handleLogin, isLoading } = useContext(AuthContext);
 
-  const {isLoading} = useContext(AuthContext) 
-
+  // Redireciona para a página inicial se o usuário já estiver autenticado
   useEffect(() => {
     if (usuario.token !== "") {
-        navigate('/home')
+      navigate('/home');
     }
-}, [usuario])
+  }, [usuario]);
 
-function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
-  setUsuarioLogin({
+  // Atualiza o estado local com os dados do formulário
+  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+    setUsuarioLogin({
       ...usuarioLogin,
-      [e.target.name]: e.target.value
-  })
-}
+      [e.target.name]: e.target.value,
+    });
+  }
 
-function login(e: ChangeEvent<HTMLFormElement>) {
-  e.preventDefault()
-  handleLogin(usuarioLogin)
-}
+  // Envia os dados do formulário para a função de login
+  function login(e: ChangeEvent<HTMLFormElement>) {
+    e.preventDefault();
+    handleLogin(usuarioLogin);
+  }
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold ">
+      <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold">
+        {/* Formulário de login */}
         <form className="flex justify-center items-center flex-col w-1/2 gap-4" onSubmit={login}>
-          <h2 className="text-slate-900 text-5xl ">Entrar</h2>
+          <h2 className="text-slate-900 text-5xl">Entrar</h2>
+          {/* Campo de usuário */}
           <div className="flex flex-col w-full">
             <label htmlFor="usuario">Usuário</label>
             <input
@@ -49,10 +53,11 @@ function login(e: ChangeEvent<HTMLFormElement>) {
               name="usuario"
               placeholder="Usuario"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuarioLogin.usuario} 
+              value={usuarioLogin.usuario}
               onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
+          {/* Campo de senha */}
           <div className="flex flex-col w-full">
             <label htmlFor="senha">Senha</label>
             <input
@@ -61,23 +66,27 @@ function login(e: ChangeEvent<HTMLFormElement>) {
               name="senha"
               placeholder="Senha"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuarioLogin.senha} 
+              value={usuarioLogin.senha}
               onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
-          <button  type='submit' className="rounded bg-indigo-400 hover:bg-indigo-900 text-white w-1/2 py-2 flex justify-center">
-           {isLoading ? <RotatingLines
-            strokeColor="white"
-            strokeWidth="5"
-            animationDuration="0.75"
-            width="24"
-            visible={true}
-          /> :
-            <span>Entrar</span>}
+          {/* Botão de login com um spinner de carregamento */}
+          <button type="submit" className="rounded bg-indigo-400 hover:bg-indigo-900 text-white w-1/2 py-2 flex justify-center">
+            {isLoading ? (
+              <RotatingLines
+                strokeColor="white"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="24"
+                visible={true}
+              />
+            ) : (
+              <span>Entrar</span>
+            )}
           </button>
-
+          {/* Linha divisória */}
           <hr className="border-slate-800 w-full" />
-
+          {/* Link para a página de cadastro */}
           <p>
             Ainda não tem uma conta?{' '}
             <Link to="/cadastro" className="text-indigo-800 hover:underline">
@@ -85,6 +94,7 @@ function login(e: ChangeEvent<HTMLFormElement>) {
             </Link>
           </p>
         </form>
+        {/* Elemento de fundo, visível apenas em telas grandes */}
         <div className="fundoLogin hidden lg:block"></div>
       </div>
     </>
