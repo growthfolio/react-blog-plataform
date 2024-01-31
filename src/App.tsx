@@ -1,4 +1,4 @@
-import React from 'react';
+
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Login from './pages/login/Login';
