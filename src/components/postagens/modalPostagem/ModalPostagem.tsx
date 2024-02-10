@@ -1,22 +1,31 @@
 import FormularioPostagem from '../formularioPostagem/FormularioPostagem';
-
 import 'reactjs-popup/dist/index.css';
 import Popup from 'reactjs-popup';
-
-import './ModalPostagem.css'
+import './ModalPostagem.css';
 
 function ModalPostagem() {
+    const isMobile = window.innerWidth <= 768; // Defina um ponto de quebra para dispositivos móveis
+
+    const contentStyle = {
+        width: isMobile ? '90%' : 'auto',
+        height: isMobile ? 'auto' : 'auto',
+        padding: isMobile ? '20px' : '0',
+        paddingTop: isMobile ? '0' : '20px',
+        
+    };
+
     return (
         <>
-            <Popup  // É a Janela que se abre ao clicarmos no Botão para exibir o Formulário
-                trigger={   // É um gatilho (botão) que sempre pressionado abre o Modal/PopUp/Janela
-                    // É o botão que é clicado e abre o Modal
+            <Popup
+                trigger={
                     <button className='border rounded px-4 hover:bg-white hover:text-indigo-800'>
                         Nova postagem
                     </button>
-                } modal>
+                }
+                modal
+                contentStyle={contentStyle} // Defina o estilo do conteúdo do popup
+            >
                 <div>
-                    {/* Conteúdo do Modal, no caso o Formulario de Postagem */}
                     <FormularioPostagem />
                 </div>
             </Popup>

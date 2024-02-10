@@ -136,9 +136,22 @@ function FormularioPostagem() {
 
   const carregandoTema = tema.descricao === '';
 
+  const isMobile = window.innerWidth <= 768; // Defina um ponto de quebra para dispositivos móveis
+
+    const contentStyle = {
+        width: isMobile ? '90%' : 'auto',
+        height: isMobile ? 'auto' : 'auto',
+        padding: isMobile ? '20px' : '0',
+        paddingTop: isMobile ? '0' : '20px',
+        
+    };
+
+
   return (
-    <div className="container flex flex-col mx-auto items-center">
-      <h1 className="text-4xl text-center my-8">{id !== undefined ? 'Editar Postagem' : 'Cadastrar Postagem'}</h1>
+    <div className="container flex flex-col mx-auto items-center
+    
+    ">
+      <h1 className="text-4xl text-center my-8">{id !== undefined ? 'Editar Postagem' : 'Criar Postagem'}</h1>
 
       <form onSubmit={gerarNovaPostagem} className="flex flex-col w-1/2 gap-4">
         <div className="flex flex-col gap-2">
@@ -176,7 +189,7 @@ function FormularioPostagem() {
             ))}
           </select>
         </div>
-        <button disabled={carregandoTema} type='submit' className='rounded disabled:bg-slate-200 bg-indigo-400 hover:bg-indigo-800 text-white font-bold w-1/2 mx-auto block py-2'>
+        <button disabled={carregandoTema} type='submit' className='rounded disabled:bg-slate-200 bg-blue-600/90 hover:bg-blue-600 text-white font-bold w-1/2 mx-auto block py-2 px-auto'>
           {carregandoTema ? <span>Carregando</span> : id !== undefined ? 'Editar' : 'Cadastrar'}
         </button>
       </form>
