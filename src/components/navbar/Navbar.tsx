@@ -31,7 +31,10 @@ function Navbar() {
               <Link to='' onClick={logout} className='hover:underline'>Sair</Link>
             </div>
             <div className='flex md:hidden gap-6 items-center mx-4'>
-              <HamburguerIcon />
+              <button onClick={() => console.log('Menu mobile')}>
+                <HamburguerIcon />
+              </button>
+              
             </div>
           </div>
         </div>
