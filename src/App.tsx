@@ -15,6 +15,7 @@ import FormularioPostagem from './components/postagens/formularioPostagem/Formul
 
 import Perfil from './pages/perfil/Perfil';
 import DeletarPostagem from './components/postagens/deletarPostagem/DeletarPostagem';
+import { AppContexts } from './contexts';
 
 function App() {
   
@@ -22,6 +23,7 @@ function App() {
     <>
       <AuthProvider>
       <ToastContainer />
+        <AppContexts>
         <BrowserRouter>
         <Navbar />
           <div className='min-h-[80vh]'>
@@ -43,6 +45,7 @@ function App() {
           </div>
           <Footer />
         </BrowserRouter>
+        </AppContexts>
       </AuthProvider>
     </>
   );
