@@ -26,12 +26,12 @@ function CardPostagem({ post }: CardPostagemProps) {    // Definido que o CardPo
             </div>
             <div className="flex  ">
                 {/* Essa rota envia o usuário para o formulário de edição, passando em sua url, o id da Postagem que vai ser editada */}
-                <Link to={`/editarPostagem/${post.id}`} className='w-full rounded-bl-lg text-white bg-blue-600/90 hover:bg-blue-600 flex items-center justify-center py-2'>
+                <Link to={`/editarPostagem/${post.id}`} className='w-full rounded-bl-lg text-white bg-blue-600 hover:bg-blue-600/90 flex items-center justify-center py-2'>
                     <button>Editar</button>
                 </Link>
 
                 {/* Essa rota envia o usuário para o formulário de exclusão, passando em sua url, o id da Postagem que vai ser excluída */}
-                <Link to={`/deletarPostagem/${post.id}`} className='text-white rounded-br-lg bg-red-600/90 hover:bg-red-600 w-full flex items-center justify-center py-2'>
+                <Link to={`/deletarPostagem/${post.id}`} className='text-white rounded-br-lg bg-red-600 hover:bg-red-600/90 w-full flex items-center justify-center py-2'>
                     <button>Deletar</button>
                 </Link>
             </div>

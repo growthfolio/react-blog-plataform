@@ -12,10 +12,10 @@ function CardTemas({tema}: CardTemaProps) {
       <header className='py-2 px-6 bg-blue-700/90 text-white font-bold text-2xl'>Tema</header>
       <p className='p-8 text-3xl bg-slate-200 h-full'>{tema.descricao}</p>
       <div className="flex">
-        <Link to={`/editarTema/${tema.id}`} className='w-full text-slate-100 bg-blue-600/90 hover:bg-blue-600 flex items-center justify-center py-2'>
+        <Link to={`/editarTema/${tema.id}`} className='w-full text-slate-100 bg-blue-600 hover:bg-blue-600/90 flex items-center justify-center py-2'>
           <button>Editar</button>
         </Link>
-        <Link to={`/deletarTema/${tema.id}`} className='text-slate-100 bg-red-600/90 hover:bg-red-600 w-full flex items-center justify-center'>
+        <Link to={`/deletarTema/${tema.id}`} className='text-slate-100 bg-red-600 hover:bg-red-600/90 w-full flex items-center justify-center'>
           <button>Deletar</button>
         </Link>
       </div>
