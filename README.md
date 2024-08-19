@@ -1,13 +1,8 @@
-[![Quality Gate Status](http://localhost:9000/api/project_badges/measure?project=blog-front&metric=alert_status&token=sqb_e3951bb7fc8e5a095901a20a9761bad035427702)](http://localhost:9000/dashboard?id=blog-front)
 
 <div align="center">
 
 # Personal Blog - React/Tailwind
 
-</div>
-
-<div align="center">
-    <img src="https://i.imgur.com/mfIYuN2.png" title="source: imgur.com" />
 </div>
 
 ## Project Description
@@ -32,12 +27,12 @@ To run this project locally, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/FelipeAJdev/personal-blog-frontend.git
+   git clone https://github.com/FelipeAJdev/react-blog-plataform.git
    ```
 
 2. **Navigate to the project directory:**
    ```bash
-   cd personal-blog-frontend
+   cd react-blog-plataform
    ```
 
 3. **Install dependencies:**
