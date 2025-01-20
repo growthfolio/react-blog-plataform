@@ -1,11 +1,11 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { AuthContext } from '../../../contexts/AuthContext';
-import Postagem from '../../../models/Postagem';
-import Tema from '../../../models/Tema';
-import { buscar, atualizar, cadastrar } from '../../../services/Service';
-import { toastAlerta } from '../../../util/toastAlerta';
-
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { X } from "@phosphor-icons/react";
+import { AuthContext } from "../../../contexts/AuthContext";
+import Postagem from "../../../models/Postagem";
+import Tema from "../../../models/Tema";
+import { buscar, atualizar, cadastrar } from "../../../services/Service";
+import { toastAlerta } from "../../../util/toastAlerta";
 
 function FormularioPostagem() {
   let navigate = useNavigate();
@@ -19,14 +19,15 @@ function FormularioPostagem() {
 
   const [tema, setTema] = useState<Tema>({
     id: 0,
-    descricao: '',
+    descricao: "",
+    postagem: [],
   });
 
   const [postagem, setPostagem] = useState<Postagem>({
     id: 0,
-    titulo: '',
-    texto: '',
-    data: '',
+    titulo: "",
+    texto: "",
+    data: "",
     tema: null,
     usuario: null,
   });
@@ -48,7 +49,7 @@ function FormularioPostagem() {
   }
 
   async function buscarTemas() {
-    await buscar('/temas', setTemas, {
+    await buscar("/temas", setTemas, {
       headers: {
         Authorization: token,
       },
@@ -56,9 +57,9 @@ function FormularioPostagem() {
   }
 
   useEffect(() => {
-    if (token === '') {
-      toastAlerta('Você precisa estar logado', 'info');
-      navigate('/');
+    if (token === "") {
+      toastAlerta("Você precisa estar logado", "info");
+      navigate("/");
     }
   }, [token]);
 
@@ -67,7 +68,6 @@ function FormularioPostagem() {
     if (id !== undefined) {
       buscarPostagemPorId(id);
       console.log(tema);
-
     }
   }, [id]);
 
@@ -88,7 +88,7 @@ function FormularioPostagem() {
   }
 
   function retornar() {
-    navigate('/postagens');
+    navigate("/postagens");
   }
 
   async function gerarNovaPostagem(e: ChangeEvent<HTMLFormElement>) {
@@ -103,14 +103,14 @@ function FormularioPostagem() {
             Authorization: token,
           },
         });
-        toastAlerta('Postagem atualizada com sucesso', 'sucesso');
+        toastAlerta("Postagem atualizada com sucesso", "sucesso");
         retornar();
       } catch (error: any) {
-        if (error.toString().includes('403')) {
-          toastAlerta('O token expirou, favor logar novamente', 'info')
-          handleLogout()
+        if (error.toString().includes("403")) {
+          toastAlerta("O token expirou, favor logar novamente", "info");
+          handleLogout();
         } else {
-          toastAlerta('Erro ao atualizar a Postagem', 'erro');
+          toastAlerta("Erro ao atualizar a Postagem", "erro");
         }
       }
     } else {
@@ -121,27 +121,40 @@ function FormularioPostagem() {
           },
         });
 
-        toastAlerta('Postagem cadastrada com sucesso', 'sucesso');
+        toastAlerta("Postagem cadastrada com sucesso", "sucesso");
         retornar();
       } catch (error: any) {
-        if (error.toString().includes('403')) {
-          toastAlerta('O token expirou, favor logar novamente', 'info')
-          handleLogout()
+        if (error.toString().includes("403")) {
+          toastAlerta("O token expirou, favor logar novamente", "info");
+          handleLogout();
         } else {
-          toastAlerta('Erro ao cadastrar a Postagem', 'erro');
+          toastAlerta("Erro ao cadastrar a Postagem", "erro");
         }
       }
     }
   }
 
-  const carregandoTema = tema.descricao === '';
+  const carregandoTema = tema.descricao === "";
 
   return (
-    <div className="container flex flex-col mx-auto items-center"    
-    >
-      <h1 className="text-4xl text-center my-8">{id !== undefined ? 'Editar Postagem' : 'Cadastrar Postagem'}</h1>
+    <div className="container flex flex-col mx-auto items-center relative">
+      {/* Botão de fechar */}
+      <button
+        onClick={retornar}
+        className="absolute top-4 right-4 text-gray-700 hover:text-red-600 transition-colors"
+        title="Fechar Modal"
+      >
+        <X size={24} weight="bold" />
+      </button>
 
-      <form onSubmit={gerarNovaPostagem} className="flex flex-col w-1/2 gap-4">
+      <h1 className="text-4xl text-center my-8">
+        {id !== undefined ? "Editar Postagem" : "Cadastrar Postagem"}
+      </h1>
+
+      <form
+        onSubmit={gerarNovaPostagem}
+        className="flex flex-col w-1/2 gap-4 py-10"
+      >
         <div className="flex flex-col gap-2">
           <label htmlFor="titulo">Titulo da postagem</label>
           <input
@@ -155,30 +168,49 @@ function FormularioPostagem() {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="titulo">Texto da postagem</label>
-          <input
+          <label htmlFor="texto">Texto da postagem</label>
+          <textarea
             value={postagem.texto}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
-            type="text"
-            placeholder="Texto"
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+              atualizarEstado(e)
+            }
+            placeholder="Escreva o texto da postagem aqui..."
             name="texto"
             required
-            className="border-2 border-slate-700 rounded p-2"
+            rows={4}
+            className="border-2 border-slate-700 rounded p-2 resize-y"
           />
         </div>
         <div className="flex flex-col gap-2">
           <p>Tema da postagem</p>
-          <select name="tema" id="tema" className='border p-2 border-slate-800 rounded' onChange={(e) => buscarTemaPorId(e.currentTarget.value)}>
-            <option value="" selected disabled>Selecione um tema</option>
+          <select
+            name="tema"
+            id="tema"
+            className="border p-2 border-slate-800 rounded"
+            onChange={(e) => buscarTemaPorId(e.currentTarget.value)}
+          >
+            <option value="" selected disabled>
+              Selecione um tema
+            </option>
             {temas.map((tema) => (
-              <>
-                <option value={tema.id} >{tema.descricao}</option>
-              </>
+              <option value={tema.id} key={tema.id}>
+                {tema.descricao}
+              </option>
             ))}
           </select>
         </div>
-        <button disabled={carregandoTema} type='submit' className='rounded disabled:bg-slate-200 bg-blue-600/90 hover:bg-blue-600 text-white font-bold w-1/2 mx-auto block py-2'>
-          {carregandoTema ? <span>Carregando</span> : id !== undefined ? 'Editar' : 'Cadastrar'}
+        <button
+          disabled={carregandoTema}
+          type="submit"
+          className="rounded disabled:bg-slate-200 bg-primary-dark hover:bg-primary-dark/90 text-white font-bold w-1/2 mx-auto block py-2"
+        >
+          {carregandoTema ? (
+            <span>Carregando</span>
+          ) : id !== undefined ? (
+            "Editar"
+          ) : (
+            "Cadastrar"
+          )}
         </button>
       </form>
     </div>

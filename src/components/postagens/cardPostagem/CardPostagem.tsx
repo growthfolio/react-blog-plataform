@@ -10,12 +10,12 @@ function CardPostagem({ post }: CardPostagemProps) {
   return (
     <div className="border border-gray-300 shadow-md rounded-lg overflow-hidden flex flex-col justify-between transition-transform transform hover:scale-103 hover:shadow-lg duration-500">
       {/* Header com informações do usuário */}
-      <div className="flex items-center justify-between bg-primary-dark py-3 px-4 gap-4">
+      <div className="flex items-center justify-between bg-primary-dark/90 py-3 px-4 gap-4">
         <div className="flex items-center gap-4">
           <img
             src={post.usuario?.foto}
             alt={`Foto de perfil de ${post.usuario?.nome || 'usuário anônimo'}`}
-            className="h-12 w-12 rounded-full border-2 border-white"
+            className="h-12 w-12 rounded-full border-2 border-green-500"
           />
           <h3 className="text-lg font-bold text-white">{post.usuario?.nome}</h3>
         </div>
@@ -40,7 +40,7 @@ function CardPostagem({ post }: CardPostagemProps) {
       </div>
 
       {/* Conteúdo da postagem */}
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-2 bg-slate-200">
         <h4 className="text-xl font-semibold text-gray-800">{post.titulo}</h4>
         <p className="text-gray-700">{post.texto}</p>
       </div>

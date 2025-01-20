@@ -25,68 +25,64 @@ function FormularioTema() {
 
   useEffect(() => {
     if (id !== undefined) {
-      buscarPorId(id)
+      buscarPorId(id);
     }
-  }, [id])
+  }, [id]);
 
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     setTema({
       ...tema,
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
 
-    console.log(JSON.stringify(tema))
+    console.log(JSON.stringify(tema));
   }
 
   async function gerarNovoTema(e: ChangeEvent<HTMLFormElement>) {
-    e.preventDefault()
+    e.preventDefault();
 
     if (id !== undefined) {
       try {
         await atualizar(`/temas`, tema, setTema, {
           headers: {
-            'Authorization': token
-          }
-        })
+            Authorization: token,
+          },
+        });
 
-        toastAlerta('Tema atualizado com sucesso', 'sucesso')
-        retornar()
-
+        toastAlerta('Tema atualizado com sucesso', 'sucesso');
+        retornar();
       } catch (error: any) {
         if (error.toString().includes('403')) {
-          toastAlerta('O token expirou, favor logar novamente', 'info')
-          handleLogout()
+          toastAlerta('O token expirou, favor logar novamente', 'info');
+          handleLogout();
         } else {
-          toastAlerta('Erro ao atualizar o Tema', 'erro')
+          toastAlerta('Erro ao atualizar o Tema', 'erro');
         }
-
       }
-
     } else {
       try {
         await cadastrar(`/temas`, tema, setTema, {
           headers: {
-            'Authorization': token
-          }
-        })
+            Authorization: token,
+          },
+        });
 
-        toastAlerta('Tema cadastrado com sucesso', 'sucesso')
-
+        toastAlerta('Tema cadastrado com sucesso', 'sucesso');
       } catch (error: any) {
         if (error.toString().includes('403')) {
-          toastAlerta('O token expirou, favor logar novamente', 'info')
-          handleLogout()
+          toastAlerta('O token expirou, favor logar novamente', 'info');
+          handleLogout();
         } else {
-          toastAlerta('Erro ao cadastrado o Tema', 'erro')
+          toastAlerta('Erro ao cadastrar o Tema', 'erro');
         }
       }
     }
 
-    retornar()
+    retornar();
   }
 
   function retornar() {
-    navigate("/temas")
+    navigate('/temas');
   }
 
   useEffect(() => {
@@ -97,25 +93,35 @@ function FormularioTema() {
   }, [token]);
 
   return (
-    <div className="container flex flex-col items-center justify-center mx-auto">
-      <h1 className="text-4xl text-center my-8">
+    <div className="container flex flex-col items-center justify-center mx-auto p-8">
+      <h1 className="text-3xl lg:text-4xl font-bold text-center text-gray-800 mb-6">
         {id === undefined ? 'Cadastre um novo tema' : 'Editar tema'}
       </h1>
 
-      <form className="w-1/2 flex flex-col gap-4" onSubmit={gerarNovoTema}>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="descricao">Descrição do tema</label>
+      <form
+        className="w-full max-w-md bg-white shadow-lg rounded-lg p-6 border border-gray-200"
+        onSubmit={gerarNovoTema}
+      >
+        <div className="flex flex-col gap-4">
+          <label
+            htmlFor="descricao"
+            className="text-gray-700 font-semibold text-sm"
+          >
+            Descrição do tema
+          </label>
           <input
             type="text"
-            placeholder="Descrição"
-            name='descricao'
-            className="border-2 border-slate-700 rounded p-2"
+            placeholder="Digite a descrição do tema"
+            name="descricao"
+            id="descricao"
+            className="border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value={tema.descricao}
             onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
           />
         </div>
+
         <button
-          className="rounded text-slate-100 bg-blue-600/90 hover:bg-blue-600 w-1/2 py-2 mx-auto block"
+          className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition-all duration-200"
           type="submit"
         >
           {id === undefined ? 'Cadastrar' : 'Editar'}
