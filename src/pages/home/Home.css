@@ -6,11 +6,9 @@
 .imagem_fundo{
     background-image: url('../../assets/img/Blue_Technology_Banner.png');
     background-size: cover;
-    height: 450px;
     position: relative;
-    z-index: -1;
+    z-index: 0;
     opacity: 0.9;
-    border-radius: 0 0 07px 07px;
     box-shadow: inset;
     background-position-y: 5%;
     

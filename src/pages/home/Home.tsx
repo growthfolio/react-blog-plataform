@@ -8,7 +8,7 @@ import ModalPostagem from '../../components/postagens/modalPostagem/ModalPostage
 function Home() {
     return (
         <>
-        <div className="bg-blue-700 flex justify-center">
+        <div className="bg-primary-dark imagem_fundo flex justify-center">
           <div className='container md:grid md:grid-cols-2 text-white'>
             <div className="flex flex-col gap-4 items-center justify-center py-4">
               <h2 className='text-4xl md:text-5xl font-bold'>Seja bem vindo!</h2>

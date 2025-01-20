@@ -1,42 +1,67 @@
-import { Link } from 'react-router-dom'
-import Postagem from '../../../models/Postagem'
+import { Link } from 'react-router-dom';
+import { PencilSimple, Trash } from '@phosphor-icons/react';
+import Postagem from '../../../models/Postagem';
 
-// Definida a Interface chamada CardPostagemProps, e indicamos que sua estrutura contém uma propriedade chamada post
 interface CardPostagemProps {
-    post: Postagem  // A propriedade post é um objeto da Model Postagem, ou seja, um objeto com id, texto, titulo, etc
+  post: Postagem;
 }
 
-function CardPostagem({ post }: CardPostagemProps) {    // Definido que o CardPostagem recebe uma propriedade chamada post e sua estrutura segue a Interface CardPostagemProps
-    return (
-        <div className='border-slate-300/30 border border-b-0 flex flex-col rounded overflow-hidden justify-between'>
-            <div>
-                <div className="flex w-full bg-blue-700/90 py-2 px-4 items-center gap-4">
-                    <img src={post.usuario?.foto} className='h-12 rounded-full' alt="" />   {/* aqui é exibida a foto do usuário, caso a postagem tenha sido cadastrada com um Usuário diferente de null  */}
-                    <h3 className='text-lg font-bold text-center uppercase text-white '>{post.usuario?.nome}</h3>
-                </div>
-                <div className='p-4 '>
-                    <h4 className='text-lg font-semibold uppercase'>{post.titulo}</h4> {/* post é o objeto que é recebido por meio da props. e, titulo é o atributo do objeto */}
-                    <p>{post.texto}</p>
-                    <p><span className='font-semibold'>Tema:</span> {post.tema?.descricao}</p>
-                    <p><span className='font-semibold'>Data:</span> {new Intl.DateTimeFormat(undefined, {
-                        dateStyle: 'short',
-                        timeStyle: 'short',
-                    }).format(new Date(post.data))}</p>
-                </div>
-            </div>
-            <div className="flex  ">
-                {/* Essa rota envia o usuário para o formulário de edição, passando em sua url, o id da Postagem que vai ser editada */}
-                <Link to={`/editarPostagem/${post.id}`} className='w-full rounded-bl-lg text-white bg-blue-600 hover:bg-blue-600/90 flex items-center justify-center py-2'>
-                    <button>Editar</button>
-                </Link>
-
-                {/* Essa rota envia o usuário para o formulário de exclusão, passando em sua url, o id da Postagem que vai ser excluída */}
-                <Link to={`/deletarPostagem/${post.id}`} className='text-white rounded-br-lg bg-red-600 hover:bg-red-600/90 w-full flex items-center justify-center py-2'>
-                    <button>Deletar</button>
-                </Link>
-            </div>
+function CardPostagem({ post }: CardPostagemProps) {
+  return (
+    <div className="border border-gray-300 shadow-md rounded-lg overflow-hidden flex flex-col justify-between transition-transform transform hover:scale-103 hover:shadow-lg duration-500">
+      {/* Header com informações do usuário */}
+      <div className="flex items-center justify-between bg-primary-dark py-3 px-4 gap-4">
+        <div className="flex items-center gap-4">
+          <img
+            src={post.usuario?.foto}
+            alt={`Foto de perfil de ${post.usuario?.nome || 'usuário anônimo'}`}
+            className="h-12 w-12 rounded-full border-2 border-white"
+          />
+          <h3 className="text-lg font-bold text-white">{post.usuario?.nome}</h3>
         </div>
-    )
+
+        {/* Botões de ação */}
+        <div className="flex items-center gap-2">
+          <Link
+            to={`/editarPostagem/${post.id}`}
+            className="flex items-center justify-center w-9 h-9 rounded-full text-white bg-none hover:bg-primary active:scale-95 transition-all duration-200"
+            title="Editar Postagem"
+          >
+            <PencilSimple size={20} weight="bold" />
+          </Link>
+          <Link
+            to={`/deletarPostagem/${post.id}`}
+            className="flex items-center justify-center w-9 h-9 rounded-full text-white bg-none hover:bg-red-500 active:scale-95 transition-all duration-200"
+            title="Excluir Postagem"
+          >
+            <Trash size={20} weight="bold" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Conteúdo da postagem */}
+      <div className="p-4 space-y-2">
+        <h4 className="text-xl font-semibold text-gray-800">{post.titulo}</h4>
+        <p className="text-gray-700">{post.texto}</p>
+      </div>
+
+      {/* Footer do card */}
+      <div className="bg-gray-100 px-4 py-2 flex justify-between items-center border-t border-gray-200">
+        <p className="text-sm font-semibold text-gray-700">
+          Tema: <span className="text-gray-600">{post.tema?.descricao}</span>
+        </p>
+        <p className="text-sm text-gray-600">
+          {new Intl.DateTimeFormat('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }).format(new Date(post.data))}
+        </p>
+      </div>
+    </div>
+  );
 }
 
-export default CardPostagem
+export default CardPostagem;

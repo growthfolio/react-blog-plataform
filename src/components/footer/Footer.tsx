@@ -1,45 +1,59 @@
-import { GithubLogo, InstagramLogo, LinkedinLogo } from '@phosphor-icons/react'
-import { useContext } from 'react'
-import { AuthContext } from '../../contexts/AuthContext'
+import { GithubLogo, InstagramLogo, LinkedinLogo } from '@phosphor-icons/react';
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 
 function Footer() {
+  const { usuario } = useContext(AuthContext);
+  const data = new Date().getFullYear();
 
-  const { usuario } = useContext(AuthContext)
+  let footerComponent;
 
-  let footerComponent
-
-  let data = new Date().getFullYear()
-
-  if(usuario.token !== '') {
+  if (usuario.token !== '') {
     footerComponent = (
-      <>
-        <div className="flex justify-center bg-blue-700 text-white">
-          <div className="container flex flex-col items-center py-4">
-            <p className='text-xl font-bold'>Blog pessoal Felipe Macedo | Copyright: {data}</p>
-            <p className='text-lg'>Acesse nossas redes sociais</p>
-            <div className='flex gap-2'>
-              
-              <a href="" target='_blank'>
-                <LinkedinLogo size={48} weight='bold' />
-              </a>
-              <a href="" target='_blank'>
-                <InstagramLogo size={48} weight='bold' />
-              </a>
-              <a href="" target='_blank'>
-                <GithubLogo size={42} weight='bold' />
-              </a>
-            </div>
+      <div className="flex justify-center bg-primary-dark text-white">
+        <div className="container flex flex-col items-center py-6 space-y-4">
+          {/* Título e copyright */}
+          <p className="text-lg font-bold">
+            Blog Pessoal Felipe Macedo | &copy; {data}
+          </p>
+          <p className="text-sm">Siga-nos nas redes sociais:</p>
+
+          {/* Ícones de redes sociais */}
+          <div className="flex gap-4">
+            <a
+              href="https://www.linkedin.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-blue-500 transition-colors duration-300"
+              aria-label="LinkedIn"
+            >
+              <LinkedinLogo size={32} weight="bold" />
+            </a>
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-pink-500 transition-colors duration-300"
+              aria-label="Instagram"
+            >
+              <InstagramLogo size={32} weight="bold" />
+            </a>
+            <a
+              href="https://github.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-gray-400 transition-colors duration-300"
+              aria-label="GitHub"
+            >
+              <GithubLogo size={32} weight="bold" />
+            </a>
           </div>
         </div>
-      </>
-    )
+      </div>
+    );
   }
 
-  return (
-    <>
-      {footerComponent}
-    </>
-  )
+  return <>{footerComponent}</>;
 }
 
-export default Footer
+export default Footer;

@@ -2,28 +2,31 @@ import { useNavigate } from "react-router-dom";
 import { useNavMobileContext } from "../../contexts/NavMobileContext";
 
 type Props = {
-    children: React.ReactNode;
-    to: string;
+  children: React.ReactNode;
+  to: string;
 };
 
 export function NavMobileItem({ to, children }: Props) {
-    const navigate = useNavigate();
-    const { setIsVisible } = useNavMobileContext();
+  const navigate = useNavigate();
+  const { setIsVisible } = useNavMobileContext();
 
-    function handleButtonClick() {
-        navigate(to);
-        setIsVisible(false);
-    }
-    return <button className='w-full p-4 border-b border-blue-500/80
-       hover:border-gray-100/50 text-gray-100 text-lg
-       flex items-start 
-       rounded-bl-lg 
-        active:bg-blue-600/20 active:transition-shadow
-        active:duration-300
-        active:ease-out active:shadow-lg active:shadow-gray-100/10
-        transition duration-200 ease-in-out'
-        onClick={handleButtonClick}>
-        {children}
-    </button>;
+  function handleButtonClick() {
+    navigate(to);
+    setIsVisible(false);
+  }
 
+  return (
+    <button
+      className="w-full px-6 pt-4 pb-1 border-b border-l border-primary-light
+        text-gray-200 text-lg font-medium
+        flex items-center gap-4
+        rounded-lg rounded-t-none rounded-r-none hover:bg-blue-700/30 hover:border-blue-400
+        transition-all duration-300 ease-in-out
+        focus:outline-none focus:ring focus:ring-blue-500/50
+        active:scale-95"
+      onClick={handleButtonClick}
+    >
+      {children}
+    </button>
+  );
 }
