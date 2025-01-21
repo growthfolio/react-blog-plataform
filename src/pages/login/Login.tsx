@@ -1,91 +1,178 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
-import './Login.css';
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
+import UsuarioLogin from "../../models/UsuarioLogin";
+import { RotatingLines } from "react-loader-spinner";
+import "./Login.css";
+import loginVideo from "../../assets/globe-5fdfa9a0f4.mp4";
 
-import { Link, useNavigate } from 'react-router-dom';
-
-import { AuthContext } from '../../contexts/AuthContext';
-import UsuarioLogin from '../../models/UsuarioLogin';
-import { RotatingLines } from 'react-loader-spinner';
+function getInputClasses(hasError: boolean): string {
+  return `border-2 rounded-[12px] rounded-t-none p-3 transition-all outline-none ${
+    hasError
+      ? "border-red-500 ring-red-500 focus:ring-red-500"
+      : "border-slate-700/40 focus:ring-blue-500"
+  }`;
+}
 
 function Login() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>(
     {} as UsuarioLogin
   );
 
-  const { usuario, handleLogin } = useContext(AuthContext);
+  const { usuario, handleLogin, isLoading } = useContext(AuthContext);
 
-  const {isLoading} = useContext(AuthContext) 
+  const [formError, setFormError] = useState({ usuario: "", senha: "" });
 
   useEffect(() => {
     if (usuario.token !== "") {
-        navigate('/home')
+      navigate("/home");
     }
-}, [usuario])
+  }, [usuario, navigate]);
 
-function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
-  setUsuarioLogin({
+  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setUsuarioLogin({
       ...usuarioLogin,
-      [e.target.name]: e.target.value
-  })
-}
+      [name]: value,
+    });
 
-function login(e: ChangeEvent<HTMLFormElement>) {
-  e.preventDefault()
-  handleLogin(usuarioLogin)
-}
+    // Limpa erros ao digitar
+    if (value.trim() !== "") {
+      setFormError({ ...formError, [name]: "" });
+    }
+  }
+
+  function validarFormulario() {
+    const erros = { usuario: "", senha: "" };
+    let isValid = true;
+
+    if (!usuarioLogin.usuario || usuarioLogin.usuario.trim() === "") {
+      erros.usuario = "O campo Usuário é obrigatório.";
+      isValid = false;
+    }
+
+    if (!usuarioLogin.senha || usuarioLogin.senha.trim() === "") {
+      erros.senha = "O campo Senha é obrigatório.";
+      isValid = false;
+    }
+
+    setFormError(erros);
+    return isValid;
+  }
+
+  function login(e: ChangeEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (validarFormulario()) {
+      handleLogin(usuarioLogin);
+    }
+  }
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold ">
-        <form className="flex justify-center items-center flex-col w-1/2 gap-4" onSubmit={login}>
-          <h2 className="text-slate-900 text-5xl ">Entrar</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold bg-gray-100">
+        <form
+          className="flex justify-center items-center flex-col w-3/4 lg:w-1/2 gap-6 bg-white p-8 rounded-lg shadow-lg"
+          onSubmit={login}
+        >
+          <h2 className="text-slate-900 text-4xl lg:text-3xl mb-2">
+            Bem-vindo de volta!
+          </h2>
+          <p className="text-gray-600 text-lg mb-4">
+            Por favor, insira suas credenciais para continuar.
+          </p>
+
+          {/* Campo Usuário */}
           <div className="flex flex-col w-full">
-            <label htmlFor="usuario">Usuário</label>
+            <label htmlFor="usuario" className="text-gray-700 font-semibold">
+              Usuário
+            </label>
             <input
               type="text"
               id="usuario"
               name="usuario"
-              placeholder="Usuario"
-              className="border-2 border-slate-700 rounded p-2"
-              value={usuarioLogin.usuario} 
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              placeholder="Digite seu usuário ou email"
+              className={getInputClasses(!!formError.usuario)}
+              value={usuarioLogin.usuario}
+              onChange={atualizarEstado}
             />
+            {formError.usuario && (
+              <span className="text-red-500 text-sm mt-1">
+                {formError.usuario}
+              </span>
+            )}
           </div>
+
+          {/* Campo Senha */}
           <div className="flex flex-col w-full">
-            <label htmlFor="senha">Senha</label>
+            <label htmlFor="senha" className="text-gray-700 font-semibold">
+              Senha
+            </label>
             <input
               type="password"
               id="senha"
               name="senha"
-              placeholder="Senha"
-              className="border-2 border-slate-700 rounded p-2"
-              value={usuarioLogin.senha} 
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              placeholder="Digite sua senha"
+              className={getInputClasses(!!formError.senha)}
+              value={usuarioLogin.senha}
+              onChange={atualizarEstado}
             />
+            {formError.senha && (
+              <span className="text-red-500 text-sm mt-1">
+                {formError.senha}
+              </span>
+            )}
           </div>
-          <button  type='submit' className="rounded bg-blue-600 hover:bg-blue-600/90 text-white w-1/2 py-2 flex justify-center">
-           {isLoading ? <RotatingLines
-            strokeColor="white"
-            strokeWidth="5"
-            animationDuration="0.75"
-            width="24"
-            visible={true}
-          /> :
-            <span>Entrar</span>}
+
+          {/* Botão de Login */}
+          <button
+            type="submit"
+            className={`rounded bg-neutral-dark hover:bg-neutral text-white w-full py-3 flex justify-center items-center transition-all duration-300 ${
+              isLoading ? "cursor-not-allowed opacity-70" : ""
+            }`}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <RotatingLines
+                strokeColor="white"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="24"
+                visible={true}
+              />
+            ) : (
+              <span>Entrar</span>
+            )}
           </button>
 
-          <hr className="border-slate-800 w-full" />
+          <hr className="border-slate-300 w-full my-4" />
 
-          <p>
-            Não tem uma conta?{' '}
-            <Link to="/cadastro" className="text-primary-dark hover:underline">
+          <p className="text-gray-600">
+            Não tem uma conta?{" "}
+            <Link to="/cadastro" className="text-blue-600 hover:underline">
               Cadastre-se
             </Link>
           </p>
         </form>
-        <div className="fundoLogin hidden lg:block"></div>
+        <div className="fundoLogin hidden lg:block">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src={loginVideo} type="video/mp4" />
+            Seu navegador não suporta vídeos HTML5.
+          </video>
+          <div className="content">
+            <h1>Bem-vindo ao nosso site!</h1>
+            <p>Cadastre-se e seja mais</p>
+            <a className="cursor-pointer" onClick={() => navigate('/cadastro')}>Cadastrar</a>
+          </div>
+        </div>
       </div>
     </>
   );

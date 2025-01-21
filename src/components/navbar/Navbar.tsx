@@ -4,6 +4,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { HamburguerIcon, NavMobileItem } from "./index.tsx";
 import { useNavMobileContext } from "../../contexts/NavMobileContext.tsx";
 import { X } from "@phosphor-icons/react";
+import { toastAlerta } from "../../util/toastAlerta.ts";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function Navbar() {
 
   function logout() {
     handleLogout();
-    alert("Usuário deslogado com sucesso");
+    toastAlerta("Usuário deslogado com sucesso", "sucesso");
     navigate("/login");
   }
 
