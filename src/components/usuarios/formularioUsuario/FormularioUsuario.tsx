@@ -53,21 +53,17 @@ function FormularioUsuario() {
 
   async function salvarUsuario(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
+    const dadosAtualizados = { ...usuario };
 
     try {
-      await atualizar(`/usuarios`, usuario, setUsuario, {
+      await atualizar(`/usuarios/atualizar`, dadosAtualizados, setUsuario, {
         headers: {
           Authorization: token,
         },
       });
       toastAlerta("Usuário atualizado com sucesso", "sucesso");
-    } catch (error: any) {
-      if (error.toString().includes("403")) {
-        toastAlerta("O token expirou, favor logar novamente", "info");
-        handleLogout();
-      } else {
-        toastAlerta("Erro ao salvar o usuário", "erro");
-      }
+    } catch (error) {
+      toastAlerta("Erro ao salvar o usuário", "erro");
     }
   }
 

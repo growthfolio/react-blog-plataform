@@ -8,7 +8,7 @@ import { buscar, atualizar, cadastrar } from "../../../services/Service";
 import { toastAlerta } from "../../../util/toastAlerta";
 
 function FormularioPostagem() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
 
@@ -61,13 +61,12 @@ function FormularioPostagem() {
       toastAlerta("Você precisa estar logado", "info");
       navigate("/");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   useEffect(() => {
     buscarTemas();
     if (id !== undefined) {
       buscarPostagemPorId(id);
-      console.log(tema);
     }
   }, [id]);
 
@@ -78,7 +77,7 @@ function FormularioPostagem() {
     });
   }, [tema]);
 
-  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+  function atualizarEstado(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setPostagem({
       ...postagem,
       [e.target.name]: e.target.value,
@@ -93,8 +92,6 @@ function FormularioPostagem() {
 
   async function gerarNovaPostagem(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    console.log({ postagem });
 
     if (id != undefined) {
       try {
@@ -138,7 +135,6 @@ function FormularioPostagem() {
 
   return (
     <div className="container flex flex-col mx-auto items-center relative">
-      {/* Botão de fechar */}
       <button
         onClick={retornar}
         className="absolute top-4 right-4 text-gray-700 hover:text-red-600 transition-colors"
