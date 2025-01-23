@@ -126,19 +126,20 @@ function Cadastro() {
     return isValid;
   }
 
-  
   const uploadToS3 = async (file: File): Promise<string> => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_APIGATEWAY_URL}/generate-url?fileName=${file.name}&operation=put`
-      );      
-      
+        `${import.meta.env.VITE_APIGATEWAY_URL}/generate-url?fileName=${
+          file.name
+        }&operation=put`
+      );
+
       if (!response.ok) {
         throw new Error("Erro ao obter URL pré-assinada");
       }
-  
+
       const { url } = await response.json();
-  
+
       const uploadResponse = await fetch(url, {
         method: "PUT",
         headers: {
@@ -146,18 +147,17 @@ function Cadastro() {
         },
         body: file,
       });
-  
+
       if (!uploadResponse.ok) {
         throw new Error("Erro ao fazer upload para o S3");
       }
-  
+
       return url.split("?")[0]; // Retorna o URL público do arquivo
     } catch (error) {
       console.error("Erro no upload:", error);
       return "";
     }
   };
-  
 
   async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
