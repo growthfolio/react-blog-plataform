@@ -72,7 +72,7 @@ function Login() {
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold bg-gray-100">
+      <div className="grid fundologin grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold bg-gray-200/60">
         <form
           className="flex justify-center items-center flex-col w-3/4 lg:w-1/2 gap-6 bg-white p-8 rounded-lg shadow-lg"
           onSubmit={login}
@@ -156,7 +156,7 @@ function Login() {
             </Link>
           </p>
         </form>
-        <div className="fundoLogin hidden lg:block">
+        <div className="fundoLogin fundoLogin::before hidden lg:block">
           <video
             autoPlay
             loop

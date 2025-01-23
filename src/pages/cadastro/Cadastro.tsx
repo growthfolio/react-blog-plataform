@@ -5,9 +5,10 @@ import Usuario from "../../models/Usuario";
 import { cadastrarUsuario } from "../../services/Service";
 import { toastAlerta } from "../../util/toastAlerta";
 import cadastroVideo from "../../assets/globe-5fdfa9a0f4.mp4";
-
+import { UploadSimple } from "@phosphor-icons/react";
 
 function Cadastro() {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState<Usuario>({
@@ -125,12 +126,56 @@ function Cadastro() {
     return isValid;
   }
 
+  
+  const uploadToS3 = async (file: File): Promise<string> => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_APIGATEWAY_URL}/generate-url?fileName=${file.name}&operation=put`
+      );      
+      
+      if (!response.ok) {
+        throw new Error("Erro ao obter URL pré-assinada");
+      }
+  
+      const { url } = await response.json();
+  
+      const uploadResponse = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+  
+      if (!uploadResponse.ok) {
+        throw new Error("Erro ao fazer upload para o S3");
+      }
+  
+      return url.split("?")[0]; // Retorna o URL público do arquivo
+    } catch (error) {
+      console.error("Erro no upload:", error);
+      return "";
+    }
+  };
+  
+
   async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (validarFormulario()) {
       try {
-        await cadastrarUsuario(`/usuarios/cadastrar`, usuario, () => {
+        let fotoUrl = "";
+
+        if (selectedFile) {
+          fotoUrl = await uploadToS3(selectedFile);
+        }
+
+        const usuarioAtualizado = {
+          ...usuario,
+          foto: fotoUrl,
+        };
+
+        await cadastrarUsuario(`/usuarios/cadastrar`, usuarioAtualizado, () => {
           toastAlerta("Usuário cadastrado com sucesso!", "sucesso");
           navigate("/login");
         });
@@ -163,6 +208,7 @@ function Cadastro() {
           </div>
         </div>{" "}
         <div className="w-full flex justify-center items-center">
+          <div></div>
           <form
             className="flex justify-center h-screen items-center px-20 flex-col w-full gap-6 bg-white p-8 rounded-lg shadow-lg"
             onSubmit={cadastrarNovoUsuario}
@@ -224,7 +270,7 @@ function Cadastro() {
                   htmlFor="usuario"
                   className="text-gray-700 font-semibold"
                 >
-                  Usuário
+                  Email:
                 </label>
                 <input
                   type="text"
@@ -239,18 +285,49 @@ function Cadastro() {
               </div>
 
               <div className="flex flex-col w-full">
-                <label htmlFor="foto" className="text-gray-700 font-semibold">
-                  Foto (URL)
+                <label
+                  htmlFor="foto"
+                  className="text-gray-700 font-semibold mb-0"
+                >
+                  Foto:
                 </label>
-                <input
-                  type="text"
-                  id="foto"
-                  name="foto"
-                  placeholder="Insira uma URL válida (opcional)"
-                  className={getInputClasses(false)} // Não há erro para o campo foto
-                  value={usuario.foto}
-                  onChange={atualizarCampo}
-                />
+                <div className="relative">
+                  {/* Input do tipo file */}
+                  <input
+                    type="file"
+                    id="foto"
+                    name="foto"
+                    accept="image/*"
+                    className={`block py-2 w-full text-gray-600 
+        file:mr-8 file:w-[10px] file:py-2 file:px-0 file:rounded-lg file:border-0 
+        file:text-white/0 file:bg-none
+        file:transition-all file:cursor-pointer ${getInputClasses(
+          !!formError.foto
+        )}`}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setSelectedFile(file); // Armazena o arquivo no estado
+                      }
+                    }}
+                  />
+
+                  {/* Botão estilizado com ícone */}
+                  <button
+                    type="button"
+                    className="absolute left-2 rounded top-1/2 transform -translate-y-1/2 bg-primary-dark rounded-r-none text-white p-3 flex items-center gap-2 hover:bg-gray-400 transition-all"
+                    onClick={() => document.getElementById("foto")?.click()} // Força o clique no input
+                  >
+                    <UploadSimple size={20} />
+                  </button>
+                </div>
+
+                {/* Exibição do nome do arquivo selecionado */}
+                {/* {selectedFile && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    Foto selecionada: {selectedFile.name}
+                  </p>
+                )} */}
               </div>
 
               <div className="flex flex-col w-full">
