@@ -18,7 +18,9 @@ function ModalUsuario() {
         modal
       >
         <div>
-          <FormularioUsuario />
+          <FormularioUsuario onClose={function (): void {
+            throw new Error("Function not implemented.");
+          } } />
         </div>
       </Popup>
     </>

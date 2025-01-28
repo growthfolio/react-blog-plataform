@@ -10,7 +10,7 @@ import { toastAlerta } from '../../../util/toastAlerta';
 function ListaTemas() {
   const [temas, setTemas] = useState<Tema[]>([]);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { usuario, handleLogout } = useContext(AuthContext);
   const token = usuario.token;
