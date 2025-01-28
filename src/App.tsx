@@ -16,6 +16,7 @@ import FormularioPostagem from './components/postagens/formularioPostagem/Formul
 import Perfil from './pages/perfil/Perfil';
 import DeletarPostagem from './components/postagens/deletarPostagem/DeletarPostagem';
 import { AppContexts } from './contexts';
+import ListarPostagemPorId from './components/postagens/listaPostagens/ListarPostagemPorId';
 
 function App() {
   
@@ -36,7 +37,7 @@ function App() {
               <Route path="/cadastroTema" element={<FormularioTema />} />
               <Route path="/editarTema/:id" element={<FormularioTema />} />
               <Route path="/deletarTema/:id" element={<DeletarTema />} />
-              <Route path="/postagens/:id" element={<ListaPostagens />} />
+              <Route path="/postagens/:id" element={<ListarPostagemPorId />} />
               <Route path="/postagens" element={<ListaPostagens />} />
               <Route path="/cadastroPostagem" element={<FormularioPostagem />} />
               <Route path="/editarPostagem/:id" element={<FormularioPostagem />} />
