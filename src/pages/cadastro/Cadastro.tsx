@@ -1,14 +1,17 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import "./Cadastro.css";
 import Usuario from "../../models/Usuario";
 import { cadastrarUsuario } from "../../services/Service";
 import { toastAlerta } from "../../util/toastAlerta";
 import cadastroVideo from "../../assets/globe-5fdfa9a0f4.mp4";
 import { UploadSimple } from "@phosphor-icons/react";
+import { RotatingLines } from "react-loader-spinner";
 
 function Cadastro() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // Adicionado estado de loading
   const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState<Usuario>({
@@ -82,6 +85,7 @@ function Cadastro() {
   function validarFormulario() {
     const erros: Record<string, string> = {};
     let isValid = true;
+    setIsLoading(true);
 
     if (!primeiroNome.trim()) {
       erros.primeiroNome = "O campo Primeiro Nome é obrigatório.";
@@ -123,7 +127,7 @@ function Cadastro() {
     }
 
     setFormError(erros);
-    return isValid;
+    return isValid && !isLoading;
   }
 
   const uploadToS3 = async (file: File): Promise<string> => {
@@ -365,11 +369,24 @@ function Cadastro() {
                 {renderError("confirmaSenha")}
               </div>
               <button
-                type="submit"
-                className="rounded bg-neutral-dark hover:bg-neutral text-white w-full py-3 transition-all duration-300"
-              >
-                Criar Conta
-              </button>
+            type="submit"
+            className={`rounded bg-neutral-dark hover:bg-neutral text-white w-full py-3 flex justify-center items-center transition-all duration-300 ${
+              isLoading ? "cursor-not-allowed opacity-70" : ""
+            }`}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <RotatingLines
+                strokeColor="white"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="24"
+                visible={true}
+              />
+            ) : (
+              <span>Criar Conta</span>
+            )}
+          </button>
 
               <hr className="border-slate-300 w-full my-4" />
 
