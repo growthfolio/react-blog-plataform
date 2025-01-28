@@ -40,7 +40,7 @@ function CardPostagem({ post }: CardPostagemProps) {
       </div>
 
       {/* Conteúdo da postagem */}
-      <div className="p-4 space-y-2 bg-slate-200">
+      <div className="p-4 h-full space-y-2 bg-slate-200">
         <h4 className="text-xl font-semibold text-gray-800">{post.titulo}</h4>
         <p className="text-gray-700">{post.texto}</p>
       </div>

@@ -21,7 +21,7 @@ function Footer() {
           {/* Ícones de redes sociais */}
           <div className="flex gap-4">
             <a
-              href="https://www.linkedin.com/"
+              href="https://www.linkedin.com/in/felipemacedo1"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-blue-500 transition-colors duration-300"
@@ -39,7 +39,7 @@ function Footer() {
               <InstagramLogo size={32} weight="bold" />
             </a>
             <a
-              href="https://github.com/"
+              href="https://github.com/growthfolio/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-gray-400 transition-colors duration-300"

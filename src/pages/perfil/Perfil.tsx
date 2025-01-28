@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import { toastAlerta } from "../../util/toastAlerta";
@@ -10,6 +10,7 @@ import FormularioUsuario from "../../components/usuarios/formularioUsuario/Formu
 function Perfil() {
   const navigate = useNavigate();
   const { usuario } = useContext(AuthContext);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
   useEffect(() => {
     if (usuario.token === "") {
@@ -39,22 +40,21 @@ function Perfil() {
             alt="Banner do Perfil"
             className="w-full h-full object-cover"
           />
+           <button
+            onClick={() => setMostrarFormulario(true)}
+            className="absolute top-4 right-4 p-2 bg-gray-400/50 border-sm text-white text-sm font-semibold rounded shadow hover:bg-gray-400/70 transition"
+            aria-label="Editar Banner"
+          >
+            <PencilSimple size={16} weight="bold" />
+          </button>
+
           <Popup
-            trigger={
-              <button
-                className="absolute top-4 right-4 p-2 bg-gray-400/50 border-sm text-white text-sm font-semibold rounded shadow hover:bg-gray-400/70 transition"
-                onClick={() =>
-                  toastAlerta("Função ainda não implementada", "info")
-                }
-                aria-label="Editar Banner"
-              >
-                <PencilSimple size={16} weight="bold" />
-              </button>
-            }
+            open={mostrarFormulario}
+            onClose={() => setMostrarFormulario(false)}
             modal
             nested
           >
-            <FormularioUsuario />
+            <FormularioUsuario onClose={() => setMostrarFormulario(false)} />
           </Popup>
         </div>
 
@@ -63,7 +63,7 @@ function Perfil() {
           {/* Foto do Usuário */}
           <div className="absolute left-6">
             <div className="flex -mt-11">
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 ">
                 <img
                   src={usuario.foto || "https://placehold.co/400x400"}
                   alt={`Foto de perfil de ${usuario.nome}`}
